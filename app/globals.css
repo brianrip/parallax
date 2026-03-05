@@ -22,4 +22,14 @@ body {
     transparent 1px
   );
   background-size: 32px 32px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar on chip rows */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

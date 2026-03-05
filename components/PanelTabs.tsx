@@ -1,6 +1,6 @@
 "use client";
 
-type ActiveTab = "briefing" | "pulse";
+type ActiveTab = "briefing" | "pulse" | "tracked";
 
 interface PanelTabsProps {
   activeTab: ActiveTab;
@@ -9,10 +9,10 @@ interface PanelTabsProps {
 
 export default function PanelTabs({ activeTab, onTabChange }: PanelTabsProps) {
   return (
-    <div className="flex border-b border-slate-800 mb-6 md:hidden">
+    <div className="flex border-b border-slate-800 mb-4 sm:mb-6 md:hidden">
       <button
         onClick={() => onTabChange("briefing")}
-        className={`flex-1 py-2.5 text-xs font-mono tracking-widest transition-colors
+        className={`flex-1 py-3 text-xs font-mono tracking-widest transition-colors
           ${
             activeTab === "briefing"
               ? "text-amber-400 border-b-2 border-amber-400 -mb-px"
@@ -23,7 +23,7 @@ export default function PanelTabs({ activeTab, onTabChange }: PanelTabsProps) {
       </button>
       <button
         onClick={() => onTabChange("pulse")}
-        className={`flex-1 py-2.5 text-xs font-mono tracking-widest transition-colors flex items-center justify-center gap-2
+        className={`flex-1 py-3 text-xs font-mono tracking-widest transition-colors flex items-center justify-center gap-2
           ${
             activeTab === "pulse"
               ? "text-cyan-400 border-b-2 border-cyan-400 -mb-px"

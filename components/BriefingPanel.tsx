@@ -31,7 +31,7 @@ export default function BriefingPanel({ briefing, loading, error }: BriefingPane
       {briefing && !loading && (
         <>
           <BiasLegend />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {briefing.articles.map((article, i) => (
               <ArticleCard key={i} article={article} />
             ))}

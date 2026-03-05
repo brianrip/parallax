@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <!-- Two offset viewing angles converging — the parallax effect -->
+  <!-- Left eye / left perspective lines -->
+  <line x1="128" y1="128" x2="256" y2="384" stroke="#fbbf24" stroke-width="28" stroke-linecap="round"/>
+  <line x1="192" y1="128" x2="288" y2="384" stroke="#fbbf24" stroke-width="28" stroke-linecap="round" opacity="0.6"/>
+  <!-- Right eye / right perspective lines -->
+  <line x1="384" y1="128" x2="256" y2="384" stroke="#22d3ee" stroke-width="28" stroke-linecap="round"/>
+  <line x1="320" y1="128" x2="224" y2="384" stroke="#22d3ee" stroke-width="28" stroke-linecap="round" opacity="0.6"/>
+  <!-- Convergence point — where both perspectives meet -->
+  <circle cx="256" cy="384" r="10" fill="#e2e8f0"/>
+</svg>

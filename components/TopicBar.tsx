@@ -48,16 +48,17 @@ export default function TopicBar({ onAnalyze, loading }: TopicBarProps) {
         </button>
       </form>
 
-      {/* Preset chips */}
-      <div className="flex flex-wrap gap-2">
+      {/* Preset chips — horizontally scrollable on mobile */}
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
         {PRESET_TOPICS.map((topic) => (
           <button
             key={topic}
             onClick={() => handleChip(topic)}
             disabled={loading}
             className="text-xs font-mono border border-slate-700 text-slate-400
-              hover:border-amber-400/50 hover:text-amber-400 px-3 py-1
-              transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              hover:border-amber-400/50 hover:text-amber-400 px-3 py-1.5 shrink-0
+              transition-colors disabled:opacity-40 disabled:cursor-not-allowed
+              active:bg-amber-400/10"
           >
             {topic}
           </button>

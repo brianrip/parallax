@@ -60,3 +60,8 @@ export interface ParallaxResult {
   briefing: BriefingResponse | null;
   pulse: PulseResponse | null;
 }
+
+export interface HistoryItem {
+  topic: string;
+  queriedAt: string;
+}

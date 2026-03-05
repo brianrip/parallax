@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +12,19 @@ export const metadata: Metadata = {
   title: "Parallax — Same event. Every angle.",
   description:
     "Dual-source news intelligence. Formal journalism bias-rated across the spectrum. Live X discourse and breaking signals. Side by side.",
+  appleWebApp: {
+    capable: true,
+    title: "Parallax",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#020817",
 };
 
 export default function RootLayout({

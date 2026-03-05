@@ -7,11 +7,14 @@ import BriefingPanel from "@/components/BriefingPanel";
 import PulsePanel from "@/components/PulsePanel";
 import WatchlistPanel from "@/components/WatchlistPanel";
 import PanelTabs from "@/components/PanelTabs";
-import type { BriefingResponse, PulseResponse, WatchlistItem } from "@/lib/types";
-import { PRESET_TOPICS } from "@/lib/topics";
+import HistoryPanel from "@/components/HistoryPanel";
+import ParallaxLogo from "@/components/ParallaxLogo";
+import type { BriefingResponse, PulseResponse, WatchlistItem, HistoryItem } from "@/lib/types";
 
 const WATCHLIST_KEY = "parallax_watchlist";
+const HISTORY_KEY = "parallax_history";
 const MAX_WATCHLIST = 10;
+const MAX_HISTORY = 20;
 
 export default function Home() {
   const [topic, setTopic] = useState("");
@@ -22,26 +25,45 @@ export default function Home() {
   const [briefingError, setBriefingError] = useState<string | null>(null);
   const [pulseError, setPulseError] = useState<string | null>(null);
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
-  const [activeTab, setActiveTab] = useState<"briefing" | "pulse">("briefing");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [activeTab, setActiveTab] = useState<"briefing" | "pulse" | "tracked">("briefing");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const hasResults = briefing || pulse;
   const isLoading = briefingLoading || pulseLoading;
 
-  // Hydrate watchlist from localStorage
+  // Hydrate watchlist + history from localStorage
   useEffect(() => {
     try {
       const stored = localStorage.getItem(WATCHLIST_KEY);
       if (stored) setWatchlist(JSON.parse(stored));
-    } catch {
-      // ignore parse errors
-    }
+    } catch { /* ignore */ }
+    try {
+      const stored = localStorage.getItem(HISTORY_KEY);
+      if (stored) setHistory(JSON.parse(stored));
+    } catch { /* ignore */ }
   }, []);
 
   const persistWatchlist = (next: WatchlistItem[]) => {
     setWatchlist(next);
     localStorage.setItem(WATCHLIST_KEY, JSON.stringify(next));
   };
+
+  const persistHistory = (next: HistoryItem[]) => {
+    setHistory(next);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+  };
+
+  const addToHistory = (topicInput: string) => {
+    const next: HistoryItem[] = [
+      { topic: topicInput, queriedAt: new Date().toISOString() },
+      ...history.filter((h) => h.topic !== topicInput),
+    ].slice(0, MAX_HISTORY);
+    persistHistory(next);
+  };
+
+  const clearHistory = () => persistHistory([]);
 
   const analyze = async (topicInput: string) => {
     abortRef.current?.abort();
@@ -55,6 +77,9 @@ export default function Home() {
     setPulseError(null);
     setBriefing(null);
     setPulse(null);
+    setMobileMenuOpen(false);
+
+    addToHistory(topicInput);
 
     const [briefingResult, pulseResult] = await Promise.allSettled([
       fetch("/api/briefing", {
@@ -106,6 +131,15 @@ export default function Home() {
     persistWatchlist(watchlist.filter((w) => w.topic !== t));
   };
 
+  const goHome = () => {
+    setBriefing(null);
+    setPulse(null);
+    setBriefingError(null);
+    setPulseError(null);
+    setTopic("");
+    setActiveTab("briefing");
+  };
+
   const isWatched = watchlist.some((w) => w.topic === topic);
 
   // TODO: [PRO] Auto-refresh interval per watchlist topic (hourly / daily)
@@ -118,17 +152,20 @@ export default function Home() {
   // TODO: [V2] Fetch trending topics from Grok on page load — replace PRESET_TOPICS
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen min-h-[100dvh] text-white">
       {/* ── LANDING STATE ─────────────────────────────────────── */}
       {!hasResults && !isLoading && (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
+        <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center px-4 py-12 sm:py-16">
           <div className="w-full max-w-2xl">
             {/* Wordmark */}
-            <div className="text-center mb-10">
-              <h1 className="text-5xl font-semibold tracking-tight text-white mb-3">
+            <div className="text-center mb-8 sm:mb-10">
+              <div className="flex justify-center mb-4">
+                <ParallaxLogo size={64} />
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white mb-3">
                 PARALLAX
               </h1>
-              <p className="text-slate-400 font-mono text-sm tracking-widest">
+              <p className="text-slate-400 font-mono text-xs sm:text-sm tracking-widest">
                 SAME EVENT. EVERY ANGLE.
               </p>
             </div>
@@ -136,8 +173,15 @@ export default function Home() {
             {/* Search */}
             <TopicBar onAnalyze={analyze} loading={isLoading} />
 
+            {/* History — landing page */}
+            {history.length > 0 && (
+              <div className="mt-4">
+                <HistoryPanel history={history} onSelect={analyze} onClear={clearHistory} />
+              </div>
+            )}
+
             {/* Panel preview descriptions */}
-            <div className="mt-10 grid grid-cols-2 gap-6 border-t border-slate-800 pt-8">
+            <div className="mt-8 sm:mt-10 grid grid-cols-2 gap-4 sm:gap-6 border-t border-slate-800 pt-6 sm:pt-8">
               <div>
                 <p className="text-xs font-mono tracking-widest text-amber-400 mb-2">BRIEFING</p>
                 <p className="text-xs text-slate-500 leading-relaxed">
@@ -162,40 +206,64 @@ export default function Home() {
 
       {/* ── DASHBOARD STATE ───────────────────────────────────── */}
       {(hasResults || isLoading) && (
-        <div className="min-h-screen flex flex-col">
-          {/* Header bar */}
-          <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+        <div className="min-h-screen min-h-[100dvh] flex flex-col">
+          {/* Sticky header bar */}
+          <header className="sticky top-0 z-30 bg-[#020817]/95 backdrop-blur-sm border-b border-slate-800 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
             <button
-              onClick={() => {
-                setBriefing(null);
-                setPulse(null);
-                setBriefingError(null);
-                setPulseError(null);
-                setTopic("");
-              }}
-              className="text-sm font-semibold tracking-tight text-white hover:text-amber-400 transition-colors"
+              onClick={goHome}
+              className="flex items-center gap-2 text-sm font-semibold tracking-tight text-white hover:text-amber-400 transition-colors shrink-0"
             >
-              PARALLAX
+              <ParallaxLogo size={24} />
+              <span className="hidden sm:inline">PARALLAX</span>
             </button>
-            <p className="text-xs font-mono text-slate-500 tracking-widest hidden sm:block">
+            <p className="text-xs font-mono text-slate-500 tracking-widest hidden md:block">
               SAME EVENT. EVERY ANGLE.
             </p>
-            {topic && (
+            <div className="flex items-center gap-3">
+              {topic && (
+                <button
+                  onClick={isWatched ? () => removeFromWatchlist(topic) : saveToWatchlist}
+                  className={`text-xs font-mono tracking-wider transition-colors ${
+                    isWatched
+                      ? "text-amber-400 hover:text-slate-400"
+                      : "text-slate-500 hover:text-amber-400"
+                  }`}
+                  title={isWatched ? "Remove from tracked" : "Track this topic"}
+                >
+                  {isWatched ? "★ TRACKED" : "☆ TRACK"}
+                </button>
+              )}
+              {/* Mobile menu toggle for tracked/history */}
               <button
-                onClick={isWatched ? () => removeFromWatchlist(topic) : saveToWatchlist}
-                className={`text-xs font-mono tracking-wider transition-colors ${
-                  isWatched
-                    ? "text-amber-400 hover:text-slate-400"
-                    : "text-slate-500 hover:text-amber-400"
-                }`}
-                title={isWatched ? "Remove from tracked" : "Track this topic"}
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                className="xl:hidden text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors border border-slate-700 px-2.5 py-1.5"
+                aria-label="Menu"
               >
-                {isWatched ? "★ TRACKED" : "☆ TRACK"}
+                {mobileMenuOpen ? "CLOSE" : "MENU"}
               </button>
-            )}
+            </div>
           </header>
 
-          <div className="flex-1 px-4 sm:px-6 py-6 max-w-screen-2xl mx-auto w-full">
+          {/* Mobile slide-down panel for tracked + history */}
+          {mobileMenuOpen && (
+            <div className="xl:hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur-sm px-4 py-4 space-y-4 z-20">
+              <WatchlistPanel
+                watchlist={watchlist}
+                activeTopic={topic}
+                onSelect={(t) => { analyze(t); setMobileMenuOpen(false); }}
+                onRemove={removeFromWatchlist}
+              />
+              {history.length > 0 && (
+                <HistoryPanel
+                  history={history}
+                  onSelect={(t) => { analyze(t); setMobileMenuOpen(false); }}
+                  onClear={clearHistory}
+                />
+              )}
+            </div>
+          )}
+
+          <div className="flex-1 px-3 sm:px-6 py-4 sm:py-6 max-w-screen-2xl mx-auto w-full">
             {/* Topic search bar */}
             <TopicBar onAnalyze={analyze} loading={isLoading} />
 
@@ -213,9 +281,9 @@ export default function Home() {
             <PanelTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
             {/* Main content grid */}
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr] xl:grid-cols-[1fr_1px_1fr_200px] gap-0">
-              {/* Briefing panel — hidden on mobile when pulse tab active */}
-              <div className={`pb-8 md:pr-6 ${activeTab === "pulse" ? "hidden md:block" : ""}`}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr] xl:grid-cols-[1fr_1px_1fr_220px] gap-0">
+              {/* Briefing panel */}
+              <div className={`pb-6 sm:pb-8 md:pr-6 ${activeTab !== "briefing" ? "hidden md:block" : ""}`}>
                 <BriefingPanel
                   briefing={briefing}
                   loading={briefingLoading}
@@ -226,8 +294,8 @@ export default function Home() {
               {/* Vertical divider — desktop only */}
               <div className="hidden md:block bg-slate-800 self-stretch" />
 
-              {/* Pulse panel — hidden on mobile when briefing tab active */}
-              <div className={`pb-8 md:pl-6 ${activeTab === "briefing" ? "hidden md:block" : ""}`}>
+              {/* Pulse panel */}
+              <div className={`pb-6 sm:pb-8 md:pl-6 ${activeTab !== "pulse" ? "hidden md:block" : ""}`}>
                 <PulsePanel
                   pulse={pulse}
                   loading={pulseLoading}
@@ -235,14 +303,21 @@ export default function Home() {
                 />
               </div>
 
-              {/* Watchlist sidebar — desktop only */}
-              <div className="hidden xl:block pl-6 border-l border-slate-800">
+              {/* Watchlist + history sidebar — desktop only */}
+              <div className="hidden xl:block pl-6 border-l border-slate-800 space-y-6">
                 <WatchlistPanel
                   watchlist={watchlist}
                   activeTopic={topic}
                   onSelect={analyze}
                   onRemove={removeFromWatchlist}
                 />
+                {history.length > 0 && (
+                  <HistoryPanel
+                    history={history}
+                    onSelect={analyze}
+                    onClear={clearHistory}
+                  />
+                )}
               </div>
             </div>
           </div>
