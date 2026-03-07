@@ -32,8 +32,8 @@ export async function POST(req: Request) {
         { role: "user", content: sanitizedTopic },
       ],
       max_tokens: 2000,
-      // grok-3 has live search enabled by default
-      // If signals appear stale, add: search_parameters: { mode: "auto", sources: [{ type: "x" }, { type: "web" }] }
+      // @ts-expect-error — xAI extension for live search
+      search_parameters: { mode: "auto", sources: [{ type: "x" }, { type: "web" }] },
     });
 
     text = response.choices[0]?.message?.content ?? "";
@@ -45,11 +45,18 @@ export async function POST(req: Request) {
     );
   }
 
-  const cleaned = text
+  // Strip markdown fences and find JSON object
+  let cleaned = text
     .replace(/^```json\s*/i, "")
     .replace(/^```\s*/i, "")
     .replace(/```\s*$/i, "")
     .trim();
+
+  const jsonStart = cleaned.indexOf("{");
+  const jsonEnd = cleaned.lastIndexOf("}");
+  if (jsonStart > 0 && jsonEnd > jsonStart) {
+    cleaned = cleaned.slice(jsonStart, jsonEnd + 1);
+  }
 
   let parsed: Record<string, unknown>;
   try {

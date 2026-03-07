@@ -1,5 +1,6 @@
 "use client";
 
+import { RefreshCw } from "lucide-react";
 import type { HistoryItem } from "@/lib/types";
 
 interface HistoryPanelProps {
@@ -25,26 +26,41 @@ export default function HistoryPanel({ history, onSelect, onClear }: HistoryPane
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-mono tracking-widest text-slate-500">RECENT</span>
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+          <span
+            className="uppercase text-[var(--color-amber)]"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+          >
+            Recent
+          </span>
+        </div>
         <button
           onClick={onClear}
-          className="text-xs font-mono text-slate-600 hover:text-slate-400 transition-colors"
+          className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-colors"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.05em" }}
         >
           CLEAR
         </button>
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-px">
         {history.map((item, i) => (
           <button
             key={`${item.topic}-${i}`}
             onClick={() => onSelect(item.topic)}
-            className="text-xs font-mono border border-slate-800 text-slate-400
-              hover:border-amber-400/50 hover:text-amber-400 px-2.5 py-1
-              transition-colors bg-slate-900/50 flex items-center gap-2"
+            className="border border-[var(--color-border)] text-[var(--color-text-secondary)]
+              bg-[var(--color-surface)]
+              hover:border-[var(--color-amber)] hover:text-[var(--color-amber)]
+              hover:bg-[var(--color-amber-glow)]
+              px-2.5 py-1.5 transition-all flex items-center gap-2"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}
             title={`Queried ${timeAgo(item.queriedAt)}`}
           >
+            <RefreshCw size={10} strokeWidth={1.5} className="opacity-40" />
             <span className="truncate max-w-[140px]">{item.topic}</span>
-            <span className="text-slate-600 shrink-0">{timeAgo(item.queriedAt)}</span>
+            <span className="text-[var(--color-text-tertiary)] shrink-0" style={{ fontSize: "10px" }}>
+              {timeAgo(item.queriedAt)}
+            </span>
           </button>
         ))}
       </div>

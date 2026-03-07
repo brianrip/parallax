@@ -4,13 +4,20 @@ interface ErrorStateProps {
 }
 
 export default function ErrorState({ message, side }: ErrorStateProps) {
-  const accentColor = side === "briefing" ? "border-l-amber-600/50" : "border-l-cyan-600/50";
-  const labelColor = side === "briefing" ? "text-amber-600" : "text-cyan-600";
-
   return (
-    <div className={`border border-slate-800 border-l-2 ${accentColor} bg-slate-900 px-4 py-3`}>
-      <p className={`text-xs font-mono tracking-widest mb-1 ${labelColor}`}>FEED UNAVAILABLE</p>
-      <p className="text-sm text-slate-400">{message}</p>
+    <div className="bg-[var(--color-surface)] border border-[var(--color-border)] border-l-2 border-l-[var(--color-amber)] px-5 py-4">
+      <p
+        className="text-[var(--color-amber)] mb-1 uppercase"
+        style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+      >
+        {side === "briefing" ? "Briefing" : "Pulse"} Unavailable
+      </p>
+      <p
+        className="text-[var(--color-text-secondary)]"
+        style={{ fontFamily: "var(--font-body)", fontSize: "13px" }}
+      >
+        {message}
+      </p>
     </div>
   );
 }

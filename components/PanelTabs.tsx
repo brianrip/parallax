@@ -9,29 +9,31 @@ interface PanelTabsProps {
 
 export default function PanelTabs({ activeTab, onTabChange }: PanelTabsProps) {
   return (
-    <div className="flex border-b border-slate-800 mb-4 sm:mb-6 md:hidden">
+    <div className="flex border-b border-[var(--color-border)] mb-4 sm:mb-6 md:hidden">
       <button
         onClick={() => onTabChange("briefing")}
-        className={`flex-1 py-3 text-xs font-mono tracking-widest transition-colors
+        className={`flex-1 py-3 uppercase transition-colors
           ${
             activeTab === "briefing"
-              ? "text-amber-400 border-b-2 border-amber-400 -mb-px"
-              : "text-slate-500 hover:text-slate-300"
+              ? "text-[var(--color-amber)] border-b-2 border-[var(--color-amber)] -mb-px"
+              : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
           }`}
+        style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
       >
-        BRIEFING
+        Briefing
       </button>
       <button
         onClick={() => onTabChange("pulse")}
-        className={`flex-1 py-3 text-xs font-mono tracking-widest transition-colors flex items-center justify-center gap-2
+        className={`flex-1 py-3 uppercase transition-colors flex items-center justify-center gap-2
           ${
             activeTab === "pulse"
-              ? "text-cyan-400 border-b-2 border-cyan-400 -mb-px"
-              : "text-slate-500 hover:text-slate-300"
+              ? "text-[var(--color-amber)] border-b-2 border-[var(--color-amber)] -mb-px"
+              : "text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
           }`}
+        style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
       >
-        PULSE
-        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+        Pulse
+        <span className="w-1.5 h-1.5 rounded-full bg-[var(--sentiment-hopeful)] animate-pulse" />
       </button>
     </div>
   );

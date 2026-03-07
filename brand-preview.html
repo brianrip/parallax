@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parallax — Brand Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-base:           #050810;
+  --color-surface:        #0D1117;
+  --color-surface-raised: #131920;
+  --color-border:         #1E2530;
+  --color-border-subtle:  #151C26;
+  --color-amber:          #F5A623;
+  --color-amber-dim:      #C47D10;
+  --color-amber-glow:     rgba(245,166,35,0.08);
+  --color-text-primary:   #F0F4FF;
+  --color-text-secondary: #8892A4;
+  --color-text-tertiary:  #4A5568;
+  --bias-left:            #1D4ED8;
+  --bias-center-left:     #0F766E;
+  --bias-center:          #475569;
+  --bias-center-right:    #C2410C;
+  --bias-right:           #B91C1C;
+  --bias-state:           #6D28D9;
+  --sentiment-alarming:   #F87171;
+  --sentiment-cautious:   #FB923C;
+  --sentiment-neutral:    #8892A4;
+  --sentiment-hopeful:    #2DD4BF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --font-body:    'IBM Plex Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--color-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  padding: 0;
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-svg .input-line {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: drawLine 300ms ease 200ms forwards;
+}
+.logo-svg .origin-dot { opacity: 0; animation: fadeIn 150ms ease 500ms forwards; }
+.logo-svg .out1 { stroke-dasharray: 32; stroke-dashoffset: 32; animation: drawLine 220ms ease 520ms forwards; }
+.logo-svg .out2 { stroke-dasharray: 28; stroke-dashoffset: 28; animation: drawLine 220ms ease 560ms forwards; }
+.logo-svg .out3 { stroke-dasharray: 24; stroke-dashoffset: 24; animation: drawLine 220ms ease 600ms forwards; }
+.logo-svg .out4 { stroke-dasharray: 28; stroke-dashoffset: 28; animation: drawLine 220ms ease 640ms forwards; }
+.logo-svg .out5 { stroke-dasharray: 32; stroke-dashoffset: 32; animation: drawLine 220ms ease 680ms forwards; }
+
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.15em;
+}
+
+/* ─── TOPIC BAR ───────────────────────────────────────── */
+.topic-section {
+  padding: 24px 40px 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.search-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.search-input {
+  flex: 1;
+  background: var(--color-base);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  padding: 11px 16px;
+  font: 400 14px var(--font-body);
+  color: var(--color-text-primary);
+  outline: none;
+  border-radius: 0;
+}
+.search-input::placeholder { color: var(--color-text-tertiary); }
+.search-input:focus { border-color: var(--color-amber); }
+
+.btn-primary {
+  background: var(--color-amber);
+  color: #050810;
+  border: none;
+  padding: 11px 24px;
+  font: 500 13px var(--font-body);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border-radius: 0;
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--color-amber-dim); }
+
+.chips {
+  display: flex;
+  gap: 1px;
+  flex-wrap: wrap;
+}
+.chip {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  background: var(--color-base);
+  border: 1px solid var(--color-border);
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 120ms;
+}
+.chip:hover, .chip.active {
+  border-color: var(--color-amber);
+  color: var(--color-amber);
+  background: var(--color-amber-glow);
+}
+
+/* ─── SECTION LABEL ───────────────────────────────────── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 10px var(--font-mono);
+  letter-spacing: 0.2em;
+  color: var(--color-amber);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-bar {
+  width: 2px;
+  height: 12px;
+  background: var(--color-amber);
+  flex-shrink: 0;
+}
+
+/* ─── SITUATION SUMMARY ───────────────────────────────── */
+.situation-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 2px solid var(--color-amber);
+  padding: 20px 24px;
+  margin: 24px 40px;
+}
+.situation-text {
+  font: 400 14px/1.7 var(--font-body);
+  color: var(--color-text-secondary);
+  max-width: 900px;
+}
+
+/* ─── DUAL PANEL ──────────────────────────────────────── */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin: 0 40px 40px;
+}
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 24px;
+}
+
+/* ─── ARTICLE CARD ────────────────────────────────────── */
+.article-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.article-card {
+  background: var(--color-base);
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 150ms, box-shadow 150ms;
+  animation: fadeUp 300ms ease forwards;
+  opacity: 0;
+}
+.article-card:hover {
+  border-color: rgba(245,166,35,0.4);
+  box-shadow: 0 0 0 1px rgba(245,166,35,0.08);
+}
+.article-card:nth-child(1) { animation-delay: 0ms }
+.article-card:nth-child(2) { animation-delay: 60ms }
+.article-card:nth-child(3) { animation-delay: 120ms }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.source-name {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 500 9px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #F0F4FF;
+  white-space: nowrap;
+}
+
+.headline {
+  font: 600 14px/1.4 var(--font-body);
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.framing {
+  font: 400 italic 12px/1.5 var(--font-body);
+  color: var(--color-text-tertiary);
+  margin-bottom: 8px;
+}
+
+.summary {
+  font: 400 12px/1.6 var(--font-body);
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.read-link {
+  font: 500 11px var(--font-mono);
+  color: var(--color-amber);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.read-link:hover { color: var(--color-amber-dim); }
+
+.timestamp {
+  font: 400 10px var(--font-mono);
+  color: var(--color-text-tertiary);
+}
+
+/* ─── PULSE ITEMS ─────────────────────────────────────── */
+.discourse-snapshot {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-left: 2px solid var(--color-border);
+  padding: 12px 16px;
+  font: 400 12px/1.6 var(--font-body);
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+.pulse-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pulse-item {
+  background: var(--color-base);
+  border: 1px solid var(--color-border);
+  padding: 14px 16px;
+  transition: border-color 150ms;
+  animation: fadeUp 300ms ease forwards;
+  opacity: 0;
+}
+.pulse-item:hover { border-color: rgba(245,166,35,0.3); }
+.pulse-item:nth-child(1) { animation-delay: 80ms }
+.pulse-item:nth-child(2) { animation-delay: 140ms }
+.pulse-item:nth-child(3) { animation-delay: 200ms }
+
+.pulse-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.signal-type {
+  font: 500 9px var(--font-mono);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pulse-source {
+  font: 600 12px var(--font-body);
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.pulse-handle {
+  font: 400 11px var(--font-mono);
+  color: var(--color-text-tertiary);
+  margin-bottom: 6px;
+}
+
+.pulse-summary {
+  font: 400 12px/1.6 var(--font-body);
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.pulse-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sentiment-tag {
+  font: 400 10px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.verify-badge {
+  font: 500 9px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* ─── BIAS LEGEND ─────────────────────────────────────── */
+.bias-legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: 400 10px var(--font-mono);
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.05em;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ─── LOADING SKELETON ────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-raised) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 2px;
+}
+
+.skeleton-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── COLOR SWATCHES ──────────────────────────────────── */
+.preview-section {
+  padding: 40px;
+  border-top: 1px solid var(--color-border);
+}
+.swatch-grid {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 100px;
+}
+.swatch-block {
+  height: 48px;
+  border: 1px solid var(--color-border);
+}
+.swatch-label {
+  font: 400 9px var(--font-mono);
+  letter-spacing: 0.1em;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+}
+.swatch-hex {
+  font: 500 10px var(--font-mono);
+  color: var(--color-text-secondary);
+}
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header class="header">
+  <div class="logo-row">
+    <svg class="logo-svg" width="40" height="40" viewBox="0 0 44 44" fill="none">
+      <line class="input-line" x1="4" y1="22" x2="18" y2="22" stroke="#F5A623" stroke-width="2.5" stroke-linecap="round"/>
+      <circle class="origin-dot" cx="18" cy="22" r="2.5" fill="#F5A623"/>
+      <line class="out1" x1="18" y1="22" x2="40" y2="8"  stroke="#F0F4FF" stroke-width="2"   stroke-linecap="round" opacity="0.95"/>
+      <line class="out2" x1="18" y1="22" x2="40" y2="14" stroke="#F0F4FF" stroke-width="2"   stroke-linecap="round" opacity="0.80"/>
+      <line class="out3" x1="18" y1="22" x2="40" y2="22" stroke="#F5A623" stroke-width="2.5" stroke-linecap="round"/>
+      <line class="out4" x1="18" y1="22" x2="40" y2="30" stroke="#F0F4FF" stroke-width="2"   stroke-linecap="round" opacity="0.80"/>
+      <line class="out5" x1="18" y1="22" x2="40" y2="36" stroke="#F0F4FF" stroke-width="2"   stroke-linecap="round" opacity="0.95"/>
+    </svg>
+    <div>
+      <div class="wordmark">Parallax</div>
+      <div class="tagline">Same event. Every angle.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn-primary" style="background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border)">Watchlist</button>
+  </div>
+</header>
+
+<!-- ─── TOPIC BAR ─── -->
+<div class="topic-section">
+  <div class="search-row">
+    <input class="search-input" placeholder="Enter any topic — Iran nuclear deal, Gaza ceasefire, Taiwan…" value="Iran nuclear deal">
+    <button class="btn-primary">Analyze →</button>
+  </div>
+  <div class="chips" style="margin-bottom:0;padding-bottom:16px">
+    <div class="chip active">Iran</div>
+    <div class="chip">Gaza</div>
+    <div class="chip">Ukraine</div>
+    <div class="chip">Taiwan</div>
+    <div class="chip">US-China Trade</div>
+    <div class="chip">AI Regulation</div>
+  </div>
+</div>
+
+<!-- ─── SITUATION SUMMARY ─── -->
+<div class="situation-card">
+  <div class="section-label"><div class="section-bar"></div>What's Actually Happening</div>
+  <p class="situation-text">Iran and the United States have resumed indirect nuclear talks via Omani intermediaries following a breakdown in JCPOA negotiations in 2022. Iran continues to enrich uranium to 60% purity — close to weapons-grade — while maintaining it has no intent to develop nuclear weapons. US officials have indicated willingness to ease sanctions in exchange for enrichment caps. Israeli officials have publicly warned against any deal perceived as inadequate, raising the prospect of unilateral military action. The situation remains fluid with no formal framework in place as of early March 2026.</p>
+</div>
+
+<!-- ─── DUAL PANEL ─── -->
+<div class="panels">
+
+  <!-- BRIEFING PANEL -->
+  <div class="panel">
+    <div class="section-label"><div class="section-bar"></div>Briefing — Formal Press</div>
+
+    <div class="bias-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-left)"></div>Left</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-center-left)"></div>Ctr-Left</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-center)"></div>Center</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-center-right)"></div>Ctr-Right</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-right)"></div>Right</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--bias-state)"></div>State</div>
+    </div>
+
+    <div class="article-cards">
+
+      <div class="article-card">
+        <div class="card-header">
+          <span class="source-name">Reuters</span>
+          <span class="badge" style="background:var(--bias-center)">Center</span>
+        </div>
+        <div class="headline">US and Iran hold indirect talks in Oman as nuclear enrichment reaches new high</div>
+        <div class="framing">Frames talks as cautiously diplomatic; emphasises verification challenges.</div>
+        <div class="summary">Omani officials facilitated a third round of indirect negotiations between US and Iranian delegations. Iran has reportedly agreed to discuss enrichment caps but rejected full dismantlement of centrifuges. A senior US official called the session "constructive but inconclusive."</div>
+        <div class="card-footer">
+          <a class="read-link" href="#">Read article →</a>
+          <span class="timestamp">Mar 5, 2026</span>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="card-header">
+          <span class="source-name">Fox News</span>
+          <span class="badge" style="background:var(--bias-right)">Right</span>
+        </div>
+        <div class="headline">Biden-era appeasement: Iran inches closer to bomb as White House negotiates</div>
+        <div class="framing">Frames negotiations as Western capitulation; uses "appeasement" framing throughout.</div>
+        <div class="summary">The piece argues the current administration is repeating errors of the original JCPOA. Quotes Republican senators warning that any deal without full dismantlement is "a pathway to a nuclear Iran." Features commentary from former National Security Advisor.</div>
+        <div class="card-footer">
+          <a class="read-link" href="#">Read article →</a>
+          <span class="timestamp">Mar 4, 2026</span>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <div class="card-header">
+          <span class="source-name">Al Jazeera</span>
+          <span class="badge" style="background:var(--bias-center-left)">Center-Left</span>
+        </div>
+        <div class="headline">Iran says sanctions relief, not enrichment limits, is the real sticking point</div>
+        <div class="framing">Centres Iranian perspective; positions US sanctions as the primary obstacle to peace.</div>
+        <div class="summary">Iranian foreign ministry spokesperson stated that Tehran has shown flexibility on technical parameters but requires "concrete and verifiable" sanctions removal. The article includes perspectives from Iranian economists on the domestic impact of continued restrictions.</div>
+        <div class="card-footer">
+          <a class="read-link" href="#">Read article →</a>
+          <span class="timestamp">Mar 5, 2026</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PULSE PANEL -->
+  <div class="panel">
+    <div class="section-label"><div class="section-bar"></div>Pulse — X / Discourse</div>
+
+    <div class="discourse-snapshot">
+      X is dominated by two competing narratives: US hawks warning any deal is dangerous, and diplomacy advocates arguing talks are the only viable path. Iranian state media accounts are amplifying the sanctions-relief framing. Several prominent journalists are flagging discrepancies between official statements and what sources are saying privately.
+    </div>
+
+    <div class="pulse-items">
+
+      <div class="pulse-item">
+        <div class="pulse-header">
+          <span class="signal-type">⚡ Breaking</span>
+          <span class="verify-badge" style="background:rgba(251,146,60,0.15);color:var(--sentiment-cautious)">Plausible</span>
+        </div>
+        <div class="pulse-source">Iranian FM spokesperson</div>
+        <div class="pulse-handle">@IRIRForeignMinistry · Iranian state account</div>
+        <div class="pulse-summary">Posts claiming Iran submitted a new written proposal to Omani mediators overnight — not yet confirmed by US side or independent journalists.</div>
+        <div class="pulse-footer">
+          <span class="sentiment-tag" style="color:var(--sentiment-cautious)">⬤ Cautious</span>
+          <a class="read-link" href="#" style="font-size:10px">View →</a>
+        </div>
+      </div>
+
+      <div class="pulse-item">
+        <div class="pulse-header">
+          <span class="signal-type">📰 Journalist</span>
+          <span class="verify-badge" style="background:rgba(15,118,110,0.15);color:var(--sentiment-hopeful)">Confirmed</span>
+        </div>
+        <div class="pulse-source">Axios national security correspondent</div>
+        <div class="pulse-handle">@natashaBertrand</div>
+        <div class="pulse-summary">Thread noting that two US officials privately describe the Oman session as "the most substantive in 18 months" — contradicting the more cautious public messaging from State Dept.</div>
+        <div class="pulse-footer">
+          <span class="sentiment-tag" style="color:var(--sentiment-hopeful)">⬤ Hopeful</span>
+          <a class="read-link" href="#" style="font-size:10px">View →</a>
+        </div>
+      </div>
+
+      <div class="pulse-item">
+        <div class="pulse-header">
+          <span class="signal-type">↩ Contrarian</span>
+          <span class="verify-badge" style="background:rgba(185,28,28,0.15);color:var(--sentiment-alarming)">Unverified</span>
+        </div>
+        <div class="pulse-source">Former Mossad director</div>
+        <div class="pulse-handle">@YossiCohen_IL</div>
+        <div class="pulse-summary">Claims any deal that permits enrichment above 5% is "existentially unacceptable" and Israel reserves the right to act. Getting significant amplification from Israeli military commentators.</div>
+        <div class="pulse-footer">
+          <span class="sentiment-tag" style="color:var(--sentiment-alarming)">⬤ Alarming</span>
+          <a class="read-link" href="#" style="font-size:10px">View →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── BRAND PREVIEW SECTION ─── -->
+<div class="preview-section">
+  <div class="section-label" style="margin-bottom:24px"><div class="section-bar"></div>Brand System Reference</div>
+
+  <!-- Colors -->
+  <div class="section-label" style="margin-bottom:12px;font-size:9px;opacity:0.6">Core Palette</div>
+  <div class="swatch-grid" style="margin-bottom:32px">
+    <div class="swatch"><div class="swatch-block" style="background:#050810"></div><div class="swatch-label">Base</div><div class="swatch-hex">#050810</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#0D1117"></div><div class="swatch-label">Surface</div><div class="swatch-hex">#0D1117</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#131920"></div><div class="swatch-label">Raised</div><div class="swatch-hex">#131920</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#1E2530"></div><div class="swatch-label">Border</div><div class="swatch-hex">#1E2530</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#F5A623"></div><div class="swatch-label">Amber</div><div class="swatch-hex">#F5A623</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#F0F4FF"></div><div class="swatch-label">Text Pri</div><div class="swatch-hex">#F0F4FF</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:#8892A4"></div><div class="swatch-label">Text Sec</div><div class="swatch-hex">#8892A4</div></div>
+  </div>
+
+  <div class="section-label" style="margin-bottom:12px;font-size:9px;opacity:0.6">Bias Ratings</div>
+  <div class="swatch-grid" style="margin-bottom:32px">
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-left)"></div><div class="swatch-label">Left</div><div class="swatch-hex">#1D4ED8</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-center-left)"></div><div class="swatch-label">Ctr-Left</div><div class="swatch-hex">#0F766E</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-center)"></div><div class="swatch-label">Center</div><div class="swatch-hex">#475569</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-center-right)"></div><div class="swatch-label">Ctr-Right</div><div class="swatch-hex">#C2410C</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-right)"></div><div class="swatch-label">Right</div><div class="swatch-hex">#B91C1C</div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--bias-state)"></div><div class="swatch-label">State</div><div class="swatch-hex">#6D28D9</div></div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section-label" style="margin-bottom:16px;font-size:9px;opacity:0.6">Typography</div>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;border:1px solid var(--color-border);padding:24px">
+    <div style="font:800 28px var(--font-display);letter-spacing:-0.02em">Parallax Display — Syne 800</div>
+    <div style="font:600 16px var(--font-body);letter-spacing:-0.01em">Article Headline Weight — IBM Plex Sans 600</div>
+    <div style="font:400 14px/1.7 var(--font-body);color:var(--color-text-secondary)">Body text and summaries use IBM Plex Sans 400 at 13–14px with generous line height for readability. Color is text-secondary unless it's a headline.</div>
+    <div style="font:500 11px var(--font-mono);letter-spacing:0.15em;color:var(--color-amber);text-transform:uppercase">Section Label — DM Mono 500</div>
+    <div style="font:400 11px var(--font-mono);color:var(--color-text-tertiary);letter-spacing:0.05em">Metadata · Timestamps · Badges — DM Mono 400</div>
+    <div style="font:400 italic 13px var(--font-body);color:var(--color-text-tertiary)">Framing text — IBM Plex Sans italic, text-tertiary</div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="section-label" style="margin-bottom:12px;font-size:9px;opacity:0.6">Loading Skeleton</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+    <div class="skeleton-card">
+      <div class="skeleton" style="height:10px;width:40%"></div>
+      <div class="skeleton" style="height:14px;width:90%"></div>
+      <div class="skeleton" style="height:14px;width:75%"></div>
+      <div class="skeleton" style="height:11px;width:100%"></div>
+      <div class="skeleton" style="height:11px;width:85%"></div>
+      <div class="skeleton" style="height:11px;width:60%"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton" style="height:10px;width:35%"></div>
+      <div class="skeleton" style="height:14px;width:95%"></div>
+      <div class="skeleton" style="height:14px;width:70%"></div>
+      <div class="skeleton" style="height:11px;width:100%"></div>
+      <div class="skeleton" style="height:11px;width:90%"></div>
+      <div class="skeleton" style="height:11px;width:50%"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,19 +1,47 @@
-export default function ParallaxLogo({ size = 32 }: { size?: number }) {
+export default function ParallaxLogo({ size = 40 }: { size?: number }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 512 512"
+      viewBox="0 0 44 44"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <rect width="512" height="512" rx="96" fill="#0f172a" />
-      <line x1="128" y1="128" x2="256" y2="384" stroke="#fbbf24" strokeWidth="28" strokeLinecap="round" />
-      <line x1="192" y1="128" x2="288" y2="384" stroke="#fbbf24" strokeWidth="28" strokeLinecap="round" opacity="0.6" />
-      <line x1="384" y1="128" x2="256" y2="384" stroke="#22d3ee" strokeWidth="28" strokeLinecap="round" />
-      <line x1="320" y1="128" x2="224" y2="384" stroke="#22d3ee" strokeWidth="28" strokeLinecap="round" opacity="0.6" />
-      <circle cx="256" cy="384" r="10" fill="#e2e8f0" />
+      <line
+        x1="4" y1="22" x2="18" y2="22"
+        stroke="#F5A623" strokeWidth="2.5" strokeLinecap="round"
+        style={{ strokeDasharray: 20, strokeDashoffset: 20, animation: "drawLine 300ms ease 200ms forwards" }}
+      />
+      <circle
+        cx="18" cy="22" r="2.5" fill="#F5A623"
+        style={{ opacity: 0, animation: "fadeIn 150ms ease 500ms forwards" }}
+      />
+      <line
+        x1="18" y1="22" x2="40" y2="8"
+        stroke="#F0F4FF" strokeWidth="2" strokeLinecap="round" opacity="0.95"
+        style={{ strokeDasharray: 32, strokeDashoffset: 32, animation: "drawLine 220ms ease 520ms forwards" }}
+      />
+      <line
+        x1="18" y1="22" x2="40" y2="14"
+        stroke="#F0F4FF" strokeWidth="2" strokeLinecap="round" opacity="0.80"
+        style={{ strokeDasharray: 28, strokeDashoffset: 28, animation: "drawLine 220ms ease 560ms forwards" }}
+      />
+      <line
+        x1="18" y1="22" x2="40" y2="22"
+        stroke="#F5A623" strokeWidth="2.5" strokeLinecap="round"
+        style={{ strokeDasharray: 24, strokeDashoffset: 24, animation: "drawLine 220ms ease 600ms forwards" }}
+      />
+      <line
+        x1="18" y1="22" x2="40" y2="30"
+        stroke="#F0F4FF" strokeWidth="2" strokeLinecap="round" opacity="0.80"
+        style={{ strokeDasharray: 28, strokeDashoffset: 28, animation: "drawLine 220ms ease 640ms forwards" }}
+      />
+      <line
+        x1="18" y1="22" x2="40" y2="36"
+        stroke="#F0F4FF" strokeWidth="2" strokeLinecap="round" opacity="0.95"
+        style={{ strokeDasharray: 32, strokeDashoffset: 32, animation: "drawLine 220ms ease 680ms forwards" }}
+      />
     </svg>
   );
 }

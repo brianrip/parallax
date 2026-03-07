@@ -1,5 +1,6 @@
 "use client";
 
+import { Bookmark, X } from "lucide-react";
 import type { WatchlistItem } from "@/lib/types";
 
 interface WatchlistPanelProps {
@@ -17,55 +18,61 @@ export default function WatchlistPanel({
 }: WatchlistPanelProps) {
   return (
     <div className="min-w-0">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="flex-1 h-px bg-slate-800" />
-        <span className="text-xs font-mono tracking-widest text-slate-400">TRACKED</span>
-        <div className="flex-1 h-px bg-slate-800" />
+      <div className="flex items-center gap-2 mb-4">
+        <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+        <span
+          className="uppercase text-[var(--color-amber)]"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+        >
+          Tracked Topics
+        </span>
       </div>
 
       {watchlist.length === 0 ? (
-        <p className="text-xs font-mono text-slate-600 text-center py-4">
+        <p
+          className="text-[var(--color-text-tertiary)] text-center py-4"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}
+        >
           No tracked topics.
           <br />
-          Star a result to save it.
+          <Bookmark size={14} strokeWidth={1.5} className="inline-block mt-1 opacity-40" /> Save a result to track it.
         </p>
       ) : (
-        <ul className="space-y-1">
+        <ul className="space-y-px">
           {watchlist.map((item) => (
             <li key={item.topic}>
               <div
-                className={`flex items-center justify-between gap-2 px-3 py-2 border transition-colors cursor-pointer
+                className={`flex items-center justify-between gap-2 px-3 py-2
+                  border transition-colors cursor-pointer
                   ${
                     activeTopic === item.topic
-                      ? "border-amber-400/40 bg-slate-900 text-amber-400"
-                      : "border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600"
+                      ? "border-[rgba(245,166,35,0.4)] bg-[var(--color-surface)] text-[var(--color-amber)]"
+                      : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-text-tertiary)]"
                   }`}
                 onClick={() => onSelect(item.topic)}
               >
                 <div className="min-w-0">
-                  <p className="text-xs font-mono truncate">{item.topic}</p>
+                  <p className="truncate" style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 500 }}>
+                    {item.topic}
+                  </p>
                   {item.lastFetchedAt && (
-                    <p className="text-xs font-mono text-slate-600 mt-0.5">
+                    <p className="text-[var(--color-text-tertiary)] mt-0.5" style={{ fontFamily: "var(--font-mono)", fontSize: "10px" }}>
                       {new Date(item.lastFetchedAt).toLocaleTimeString()}
                     </p>
                   )}
                 </div>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove(item.topic);
-                  }}
-                  className="shrink-0 text-slate-600 hover:text-slate-400 transition-colors text-xs font-mono"
+                  onClick={(e) => { e.stopPropagation(); onRemove(item.topic); }}
+                  className="shrink-0 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors"
                   title="Remove"
                 >
-                  ×
+                  <X size={14} strokeWidth={1.5} />
                 </button>
               </div>
             </li>
           ))}
         </ul>
       )}
-      {/* TODO: [PRO] Auto-refresh interval per watchlist topic (hourly / daily) */}
     </div>
   );
 }

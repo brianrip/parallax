@@ -8,22 +8,32 @@ interface SituationSummaryProps {
 export default function SituationSummary({ briefing, pulse }: SituationSummaryProps) {
   if (briefing) {
     return (
-      <div className="border border-slate-800 border-l-2 border-l-amber-400/60 bg-slate-900 px-5 py-4 mb-6">
-        <p className="text-xs font-mono tracking-widest text-amber-400 mb-2">
-          SITUATION ASSESSMENT
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] border-l-2 border-l-[var(--color-amber)] px-6 py-5 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+          <span className="uppercase text-[var(--color-amber)]" style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}>
+            What&apos;s Actually Happening
+          </span>
+        </div>
+        <p className="text-[var(--color-text-secondary)] leading-[1.7] max-w-[900px]" style={{ fontFamily: "var(--font-body)", fontSize: "14px" }}>
+          {briefing.situationSummary}
         </p>
-        <p className="text-sm text-slate-200 leading-relaxed">{briefing.situationSummary}</p>
       </div>
     );
   }
 
   if (pulse) {
     return (
-      <div className="border border-slate-800 border-l-2 border-l-cyan-400/60 bg-slate-900 px-5 py-4 mb-6">
-        <p className="text-xs font-mono tracking-widest text-cyan-400 mb-2">
-          DISCOURSE SNAPSHOT — BRIEFING UNAVAILABLE
+      <div className="bg-[var(--color-surface)] border border-[var(--color-border)] border-l-2 border-l-[var(--sentiment-hopeful)] px-6 py-5 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-block w-0.5 h-3 bg-[var(--sentiment-hopeful)]" />
+          <span className="uppercase text-[var(--color-amber)]" style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}>
+            Discourse Snapshot — Briefing Unavailable
+          </span>
+        </div>
+        <p className="text-[var(--color-text-secondary)] leading-[1.7]" style={{ fontFamily: "var(--font-body)", fontSize: "14px" }}>
+          {pulse.discourseSnapshot}
         </p>
-        <p className="text-sm text-slate-200 leading-relaxed">{pulse.discourseSnapshot}</p>
       </div>
     );
   }

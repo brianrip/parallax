@@ -7,27 +7,24 @@ interface LoadingSkeletonProps {
 
 export default function LoadingSkeleton({ side, rows = 4 }: LoadingSkeletonProps) {
   const label = side === "briefing" ? "ACCESSING BRIEFING..." : "SCANNING PULSE...";
-  const barColor =
-    side === "briefing"
-      ? "bg-amber-950/60"
-      : "bg-cyan-950/60";
-  const shimmer =
-    side === "briefing"
-      ? "bg-amber-900/30"
-      : "bg-cyan-900/30";
 
   return (
     <div className="space-y-4">
-      <p className="text-xs font-mono tracking-widest text-slate-500">{label}</p>
+      <p
+        className="text-[var(--color-text-tertiary)]"
+        style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+      >
+        {label}
+      </p>
       {Array.from({ length: rows }).map((_, i) => (
         <div
           key={i}
-          className={`rounded ${barColor} p-4 space-y-2 border border-slate-800`}
+          className="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 space-y-2.5"
         >
-          <div className={`h-2 rounded ${shimmer} w-1/4`} />
-          <div className={`h-3 rounded ${shimmer} w-3/4`} />
-          <div className={`h-3 rounded ${shimmer} w-full`} />
-          <div className={`h-3 rounded ${shimmer} w-5/6`} />
+          <div className="skeleton-shimmer h-2 rounded-sm w-2/5" />
+          <div className="skeleton-shimmer h-3 rounded-sm w-4/5" />
+          <div className="skeleton-shimmer h-3 rounded-sm w-full" />
+          <div className="skeleton-shimmer h-3 rounded-sm w-5/6" />
         </div>
       ))}
     </div>

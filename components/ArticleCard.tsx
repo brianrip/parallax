@@ -1,73 +1,110 @@
 "use client";
 
 import { useState } from "react";
-import { BIAS_COLORS, BIAS_TEXT_COLORS } from "@/lib/bias";
+import { ArrowUpRight } from "lucide-react";
+import { BIAS_COLORS } from "@/lib/bias";
 import type { Article } from "@/lib/types";
 
 interface ArticleCardProps {
   article: Article;
+  index?: number;
 }
 
-export default function ArticleCard({ article }: ArticleCardProps) {
+export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div
-      className="group bg-slate-900 border border-slate-800 p-4 cursor-pointer
-        transition-all duration-150 hover:border-amber-400/40 hover:-translate-y-0.5"
+      className={`group bg-[var(--color-base)] border border-[var(--color-border)] p-5 cursor-pointer
+        transition-all duration-150 animate-fade-up
+        hover:[border-color:rgba(245,166,35,0.4)] hover:[box-shadow:0_0_0_1px_rgba(245,166,35,0.08)]
+        ${expanded ? "border-l-2 border-l-[var(--color-amber)]" : ""}`}
+      style={{ animationDelay: `${index * 50}ms` }}
       onClick={() => setExpanded((v) => !v)}
     >
-      {/* Source + bias badge */}
       <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="text-xs font-mono text-slate-500 uppercase tracking-wider truncate">
+        <span
+          className="text-[var(--color-text-secondary)] uppercase truncate"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 500, letterSpacing: "0.05em" }}
+        >
           {article.source}
         </span>
         <span
-          className={`shrink-0 text-xs font-mono px-2 py-0.5 rounded-sm ${BIAS_COLORS[article.biasRating]} text-white`}
+          className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[#F0F4FF] whitespace-nowrap"
+          style={{
+            backgroundColor: BIAS_COLORS[article.biasRating],
+            fontFamily: "var(--font-mono)",
+            fontSize: "10px",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+          }}
         >
-          {article.biasRating}
+          {article.biasRating.toUpperCase()}
         </span>
       </div>
 
-      {/* Headline */}
-      <h3 className="text-sm font-semibold text-white leading-snug mb-1">
+      <h3
+        className="text-[var(--color-text-primary)] leading-snug mb-1.5"
+        style={{ fontFamily: "var(--font-body)", fontSize: "15px", fontWeight: 600, letterSpacing: "-0.01em" }}
+      >
         {article.headline}
       </h3>
 
-      {/* Framing */}
-      <p className="text-xs italic text-slate-400 mb-2 leading-relaxed">
+      <p
+        className="text-[var(--color-text-tertiary)] italic mb-2 leading-relaxed"
+        style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+      >
         {article.framing}
       </p>
 
-      {/* Summary */}
       <p
-        className={`text-xs text-slate-300 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
+        className={`text-[var(--color-text-secondary)] leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
+        style={{ fontFamily: "var(--font-body)", fontSize: "13px" }}
       >
         {article.summary}
       </p>
 
-      {/* Expanded bias explanation */}
       {expanded && (
-        <div className="mt-3 pt-3 border-t border-slate-800">
-          <p className={`text-xs font-mono tracking-wider mb-1 ${BIAS_TEXT_COLORS[article.biasRating]}`}>
+        <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
+          <p
+            className="mb-1"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              fontWeight: 500,
+              letterSpacing: "0.2em",
+              color: BIAS_COLORS[article.biasRating],
+            }}
+          >
             BIAS ANALYSIS
           </p>
-          <p className="text-xs text-slate-400 leading-relaxed">{article.biasExplanation}</p>
+          <p
+            className="text-[var(--color-text-secondary)] leading-relaxed"
+            style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+          >
+            {article.biasExplanation}
+          </p>
         </div>
       )}
 
-      {/* Footer */}
-      <div className="flex items-center justify-between mt-3">
-        <span className="text-xs font-mono text-slate-600">{article.publishedAt}</span>
+      <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[var(--color-border-subtle)]">
+        <span
+          className="text-[var(--color-text-tertiary)]"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.05em" }}
+        >
+          {article.publishedAt}
+        </span>
         <a
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
           title="Link provided by AI — verify before citing"
-          className="text-xs font-mono text-amber-400 hover:text-amber-300 transition-colors"
+          className="text-[var(--color-amber)] hover:text-[var(--color-amber-dim)]
+            transition-colors inline-flex items-center gap-1"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 500, letterSpacing: "0.05em" }}
           onClick={(e) => e.stopPropagation()}
         >
-          Read →
+          Read <ArrowUpRight size={12} strokeWidth={1.5} />
         </a>
       </div>
     </div>

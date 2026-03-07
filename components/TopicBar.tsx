@@ -26,39 +26,45 @@ export default function TopicBar({ onAnalyze, loading }: TopicBarProps) {
 
   return (
     <div className="mb-6">
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-3">
+      <form onSubmit={handleSubmit} className="flex gap-0 mb-4">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter a topic..."
+          placeholder="Enter any topic — Iran nuclear deal, Gaza ceasefire, Taiwan..."
           maxLength={200}
           disabled={loading}
-          className="flex-1 bg-slate-900 border border-slate-700 focus:border-amber-400/50
-            focus:outline-none text-white placeholder:text-slate-600 font-mono text-sm
-            px-4 py-2.5 transition-colors disabled:opacity-50"
+          className="flex-1 bg-[var(--color-surface)] border border-[var(--color-border)]
+            border-r-0 focus:border-[var(--color-amber)] focus:outline-none
+            text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)]
+            text-sm px-4 py-3 transition-colors disabled:opacity-50"
+          style={{ fontFamily: "var(--font-body)" }}
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="bg-amber-400 text-slate-950 font-mono font-semibold text-sm px-5 py-2.5
-            hover:bg-amber-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="bg-[var(--color-amber)] text-[#050810] font-medium text-sm
+            px-6 py-3 hover:bg-[var(--color-amber-dim)] transition-colors
+            disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+          style={{ fontFamily: "var(--font-body)", letterSpacing: "0.02em" }}
         >
-          {loading ? "..." : "→"}
+          {loading ? "..." : "Analyze →"}
         </button>
       </form>
 
-      {/* Preset chips — horizontally scrollable on mobile */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+      <div className="flex gap-px overflow-x-auto pb-1 scrollbar-none">
         {PRESET_TOPICS.map((topic) => (
           <button
             key={topic}
             onClick={() => handleChip(topic)}
             disabled={loading}
-            className="text-xs font-mono border border-slate-700 text-slate-400
-              hover:border-amber-400/50 hover:text-amber-400 px-3 py-1.5 shrink-0
-              transition-colors disabled:opacity-40 disabled:cursor-not-allowed
-              active:bg-amber-400/10"
+            className="border border-[var(--color-border)] text-[var(--color-text-secondary)]
+              bg-[var(--color-base)]
+              hover:border-[var(--color-amber)] hover:text-[var(--color-amber)]
+              hover:bg-[var(--color-amber-glow)]
+              px-3.5 py-1.5 shrink-0 transition-all duration-120
+              disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 500, letterSpacing: "0.05em" }}
           >
             {topic}
           </button>

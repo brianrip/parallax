@@ -1,50 +1,82 @@
-import { SIGNAL_TYPE_LABELS, SIGNAL_TYPE_COLORS, SENTIMENT_COLORS } from "@/lib/bias";
-import type { PulseSignal } from "@/lib/types";
+import { ArrowUpRight, Zap, Landmark, Newspaper, MessageSquare, ArrowLeftRight, MapPin } from "lucide-react";
+import { SIGNAL_TYPE_LABELS, SIGNAL_TYPE_COLORS, SENTIMENT_COLORS, VERIFICATION_STYLES } from "@/lib/bias";
+import type { PulseSignal, SignalType } from "@/lib/types";
+
+const SIGNAL_ICONS: Record<SignalType, React.ReactNode> = {
+  breaking:    <Zap size={12} strokeWidth={1.5} />,
+  official:    <Landmark size={12} strokeWidth={1.5} />,
+  journalist:  <Newspaper size={12} strokeWidth={1.5} />,
+  discourse:   <MessageSquare size={12} strokeWidth={1.5} />,
+  contrarian:  <ArrowLeftRight size={12} strokeWidth={1.5} />,
+  ontheground: <MapPin size={12} strokeWidth={1.5} />,
+};
 
 interface PulseItemProps {
   signal: PulseSignal;
+  index?: number;
 }
 
-const VERIFICATION_STYLES: Record<PulseSignal["verificationStatus"], string> = {
-  unverified: "text-red-400 bg-red-950 border-red-800",
-  plausible:  "text-amber-400 bg-amber-950 border-amber-800",
-  confirmed:  "text-teal-400 bg-teal-950 border-teal-800",
-};
+export default function PulseItem({ signal, index = 0 }: PulseItemProps) {
+  const verifyStyle = VERIFICATION_STYLES[signal.verificationStatus];
 
-export default function PulseItem({ signal }: PulseItemProps) {
   return (
     <div
-      className="bg-slate-900 border border-slate-800 p-4
-        transition-all duration-150 hover:border-cyan-400/30 hover:bg-slate-800/80"
+      className="bg-[var(--color-base)] border border-[var(--color-border)] p-4
+        transition-all duration-150 animate-fade-up hover:[border-color:rgba(245,166,35,0.3)]"
+      style={{ animationDelay: `${index * 50}ms` }}
     >
-      {/* Type pill + verification badge */}
       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
         <span
-          className={`text-xs font-mono px-2 py-0.5 border rounded-sm ${SIGNAL_TYPE_COLORS[signal.type]}`}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 border rounded-sm ${SIGNAL_TYPE_COLORS[signal.type]}`}
+          style={{ fontFamily: "var(--font-mono)", fontSize: "9px", fontWeight: 500, letterSpacing: "0.15em" }}
         >
+          {SIGNAL_ICONS[signal.type]}
           {SIGNAL_TYPE_LABELS[signal.type]}
         </span>
         <span
-          className={`text-xs font-mono px-2 py-0.5 border rounded-sm ${VERIFICATION_STYLES[signal.verificationStatus]}`}
+          className="inline-flex items-center px-2 py-0.5 rounded-sm uppercase"
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "9px",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            backgroundColor: verifyStyle.bg,
+            color: verifyStyle.text,
+          }}
         >
-          {signal.verificationStatus.toUpperCase()}
+          {signal.verificationStatus}
         </span>
       </div>
 
-      {/* Source */}
-      <div className="flex items-baseline gap-2 mb-2">
-        <span className="text-xs font-medium text-slate-200">{signal.sourceDescription}</span>
+      <div className="flex items-baseline gap-2 mb-1.5">
+        <span
+          className="text-[var(--color-text-primary)]"
+          style={{ fontFamily: "var(--font-body)", fontSize: "12px", fontWeight: 600 }}
+        >
+          {signal.sourceDescription}
+        </span>
         {signal.sourceHandle && (
-          <span className="text-xs font-mono text-slate-500">{signal.sourceHandle}</span>
+          <span
+            className="text-[var(--color-text-tertiary)]"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}
+          >
+            {signal.sourceHandle}
+          </span>
         )}
       </div>
 
-      {/* Summary */}
-      <p className="text-xs text-slate-300 leading-relaxed mb-3">{signal.summary}</p>
+      <p
+        className="text-[var(--color-text-secondary)] leading-relaxed mb-3"
+        style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+      >
+        {signal.summary}
+      </p>
 
-      {/* Footer: sentiment + link */}
       <div className="flex items-center justify-between">
-        <span className={`text-xs font-mono uppercase tracking-wider ${SENTIMENT_COLORS[signal.sentiment]}`}>
+        <span
+          className={`uppercase ${SENTIMENT_COLORS[signal.sentiment]}`}
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.1em" }}
+        >
           {signal.sentiment}
         </span>
         {signal.url && (
@@ -53,9 +85,11 @@ export default function PulseItem({ signal }: PulseItemProps) {
             target="_blank"
             rel="noopener noreferrer"
             title="Link provided by AI — verify before citing"
-            className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors"
+            className="text-[var(--color-amber)] hover:text-[var(--color-amber-dim)]
+              transition-colors inline-flex items-center gap-1"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 500, letterSpacing: "0.05em" }}
           >
-            View →
+            View <ArrowUpRight size={12} strokeWidth={1.5} />
           </a>
         )}
       </div>

@@ -13,17 +13,15 @@ interface BriefingPanelProps {
 export default function BriefingPanel({ briefing, loading, error }: BriefingPanelProps) {
   return (
     <div className="min-w-0">
-      {/* Section header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="flex-1 h-px bg-slate-800" />
-        <span className="text-xs font-mono tracking-widest text-amber-400">BRIEFING</span>
-        <div className="flex-1 h-px bg-slate-800" />
+      <div className="flex items-center gap-2 mb-4">
+        <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+        <span
+          className="uppercase text-[var(--color-amber)]"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+        >
+          Briefing
+        </span>
       </div>
-
-      {/* Subheading */}
-      <p className="text-xs text-slate-500 mb-4 text-center">
-        Formal press · Bias-rated · Across the spectrum
-      </p>
 
       {loading && <LoadingSkeleton side="briefing" rows={4} />}
       {error && !loading && <ErrorState message={error} side="briefing" />}
@@ -31,12 +29,15 @@ export default function BriefingPanel({ briefing, loading, error }: BriefingPane
       {briefing && !loading && (
         <>
           <BiasLegend />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0.5">
             {briefing.articles.map((article, i) => (
-              <ArticleCard key={i} article={article} />
+              <ArticleCard key={i} article={article} index={i} />
             ))}
           </div>
-          <p className="text-xs font-mono text-slate-700 mt-4 text-right">
+          <p
+            className="text-[var(--color-text-tertiary)] mt-4 text-right"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.05em" }}
+          >
             {new Date(briefing.fetchedAt).toLocaleTimeString()}
           </p>
         </>

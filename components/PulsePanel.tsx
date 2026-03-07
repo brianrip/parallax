@@ -12,39 +12,49 @@ interface PulsePanelProps {
 export default function PulsePanel({ pulse, loading, error }: PulsePanelProps) {
   return (
     <div className="min-w-0">
-      {/* Section header with LIVE dot */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="flex-1 h-px bg-slate-800" />
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono tracking-widest text-cyan-400">PULSE</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-        </div>
-        <div className="flex-1 h-px bg-slate-800" />
+      <div className="flex items-center gap-2 mb-4">
+        <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+        <span
+          className="uppercase text-[var(--color-amber)]"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+        >
+          Pulse
+        </span>
+        <span className="inline-flex items-center gap-1.5 ml-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--sentiment-hopeful)] animate-pulse" />
+          <span
+            className="uppercase text-[var(--sentiment-hopeful)]"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.2em" }}
+          >
+            Live
+          </span>
+        </span>
       </div>
-
-      {/* Subheading */}
-      <p className="text-xs text-slate-500 mb-4 text-center">
-        X discourse · Breaking signals · On the ground
-      </p>
 
       {loading && <LoadingSkeleton side="pulse" rows={4} />}
       {error && !loading && <ErrorState message={error} side="pulse" />}
 
       {pulse && !loading && (
         <>
-          {/* Discourse snapshot */}
-          <div className="border border-slate-800 border-l-2 border-l-cyan-500/40 bg-slate-900 px-4 py-3 mb-4">
-            <p className="text-xs font-mono tracking-widest text-cyan-400/70 mb-1">DISCOURSE SNAPSHOT</p>
-            <p className="text-xs text-slate-300 leading-relaxed">{pulse.discourseSnapshot}</p>
+          <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] border-l-2 border-l-[var(--color-border)] px-4 py-3 mb-4">
+            <p
+              className="text-[var(--color-text-secondary)] leading-relaxed"
+              style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+            >
+              {pulse.discourseSnapshot}
+            </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="flex flex-col gap-0.5">
             {pulse.signals.map((signal, i) => (
-              <PulseItem key={i} signal={signal} />
+              <PulseItem key={i} signal={signal} index={i} />
             ))}
           </div>
 
-          <p className="text-xs font-mono text-slate-700 mt-4 text-right">
+          <p
+            className="text-[var(--color-text-tertiary)] mt-4 text-right"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.05em" }}
+          >
             {new Date(pulse.fetchedAt).toLocaleTimeString()}
           </p>
         </>

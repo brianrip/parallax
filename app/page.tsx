@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Bookmark, BookmarkCheck, Menu, X } from "lucide-react";
 import TopicBar from "@/components/TopicBar";
 import SituationSummary from "@/components/SituationSummary";
 import BriefingPanel from "@/components/BriefingPanel";
@@ -33,7 +34,6 @@ export default function Home() {
   const hasResults = briefing || pulse;
   const isLoading = briefingLoading || pulseLoading;
 
-  // Hydrate watchlist + history from localStorage
   useEffect(() => {
     try {
       const stored = localStorage.getItem(WATCHLIST_KEY);
@@ -110,7 +110,6 @@ export default function Home() {
     }
     setPulseLoading(false);
 
-    // Update watchlist lastFetchedAt if this topic is already saved
     persistWatchlist(
       watchlist.map((w) =>
         w.topic === topicInput ? { ...w, lastFetchedAt: new Date().toISOString() } : w
@@ -152,49 +151,75 @@ export default function Home() {
   // TODO: [V2] Fetch trending topics from Grok on page load — replace PRESET_TOPICS
 
   return (
-    <div className="min-h-screen min-h-[100dvh] text-white">
+    <div className="min-h-screen min-h-[100dvh] text-[var(--color-text-primary)]">
       {/* ── LANDING STATE ─────────────────────────────────────── */}
       {!hasResults && !isLoading && (
-        <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center px-4 py-12 sm:py-16">
+        <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center px-6 py-12 sm:py-16">
           <div className="w-full max-w-2xl">
-            {/* Wordmark */}
+            {/* Logo + Wordmark */}
             <div className="text-center mb-8 sm:mb-10">
               <div className="flex justify-center mb-4">
                 <ParallaxLogo size={64} />
               </div>
-              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white mb-3">
-                PARALLAX
+              <h1
+                className="text-[var(--color-text-primary)] mb-3"
+                style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px, 5vw, 42px)", fontWeight: 800, letterSpacing: "-0.02em" }}
+              >
+                Parallax
               </h1>
-              <p className="text-slate-400 font-mono text-xs sm:text-sm tracking-widest">
-                SAME EVENT. EVERY ANGLE.
+              <p
+                className="text-[var(--color-text-tertiary)] uppercase"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.15em" }}
+              >
+                Same event. Every angle.
               </p>
             </div>
 
             {/* Search */}
             <TopicBar onAnalyze={analyze} loading={isLoading} />
 
-            {/* History — landing page */}
+            {/* History */}
             {history.length > 0 && (
               <div className="mt-4">
                 <HistoryPanel history={history} onSelect={analyze} onClear={clearHistory} />
               </div>
             )}
 
-            {/* Panel preview descriptions */}
-            <div className="mt-8 sm:mt-10 grid grid-cols-2 gap-4 sm:gap-6 border-t border-slate-800 pt-6 sm:pt-8">
+            {/* Panel preview */}
+            <div className="mt-8 sm:mt-10 grid grid-cols-2 gap-6 border-t border-[var(--color-border)] pt-6 sm:pt-8">
               <div>
-                <p className="text-xs font-mono tracking-widest text-amber-400 mb-2">BRIEFING</p>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+                  <span
+                    className="uppercase text-[var(--color-amber)]"
+                    style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+                  >
+                    Briefing
+                  </span>
+                </div>
+                <p
+                  className="text-[var(--color-text-tertiary)] leading-relaxed"
+                  style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+                >
                   Formal press coverage from across the political spectrum. Each article bias-rated
                   and cited. One truth, many framings.
                 </p>
               </div>
               <div>
-                <p className="text-xs font-mono tracking-widest text-cyan-400 mb-2 flex items-center gap-2">
-                  PULSE
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                </p>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-block w-0.5 h-3 bg-[var(--color-amber)]" />
+                  <span
+                    className="uppercase text-[var(--color-amber)] inline-flex items-center gap-1.5"
+                    style={{ fontFamily: "var(--font-mono)", fontSize: "10px", fontWeight: 500, letterSpacing: "0.2em" }}
+                  >
+                    Pulse
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--sentiment-hopeful)] animate-pulse" />
+                  </span>
+                </div>
+                <p
+                  className="text-[var(--color-text-tertiary)] leading-relaxed"
+                  style={{ fontFamily: "var(--font-body)", fontSize: "12px" }}
+                >
                   Live X discourse. Breaking signals, official statements, journalist threads,
                   on-the-ground accounts. Right now.
                 </p>
@@ -207,46 +232,63 @@ export default function Home() {
       {/* ── DASHBOARD STATE ───────────────────────────────────── */}
       {(hasResults || isLoading) && (
         <div className="min-h-screen min-h-[100dvh] flex flex-col">
-          {/* Sticky header bar */}
-          <header className="sticky top-0 z-30 bg-[#020817]/95 backdrop-blur-sm border-b border-slate-800 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+          {/* Sticky header */}
+          <header
+            className="sticky top-0 z-30 border-b border-[var(--color-border)]
+              px-4 sm:px-10 py-3 sm:py-4 flex items-center justify-between gap-2"
+            style={{ background: "var(--color-surface)" }}
+          >
             <button
               onClick={goHome}
-              className="flex items-center gap-2 text-sm font-semibold tracking-tight text-white hover:text-amber-400 transition-colors shrink-0"
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity shrink-0"
             >
-              <ParallaxLogo size={24} />
-              <span className="hidden sm:inline">PARALLAX</span>
+              <ParallaxLogo size={32} />
+              <span
+                className="hidden sm:inline text-[var(--color-text-primary)]"
+                style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              >
+                Parallax
+              </span>
             </button>
-            <p className="text-xs font-mono text-slate-500 tracking-widest hidden md:block">
-              SAME EVENT. EVERY ANGLE.
+            <p
+              className="text-[var(--color-text-tertiary)] hidden md:block uppercase"
+              style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.15em" }}
+            >
+              Same event. Every angle.
             </p>
             <div className="flex items-center gap-3">
               {topic && (
                 <button
                   onClick={isWatched ? () => removeFromWatchlist(topic) : saveToWatchlist}
-                  className={`text-xs font-mono tracking-wider transition-colors ${
+                  className={`transition-colors inline-flex items-center gap-1.5 ${
                     isWatched
-                      ? "text-amber-400 hover:text-slate-400"
-                      : "text-slate-500 hover:text-amber-400"
+                      ? "text-[var(--color-amber)] hover:text-[var(--color-text-secondary)]"
+                      : "text-[var(--color-text-tertiary)] hover:text-[var(--color-amber)]"
                   }`}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.05em" }}
                   title={isWatched ? "Remove from tracked" : "Track this topic"}
                 >
-                  {isWatched ? "★ TRACKED" : "☆ TRACK"}
+                  {isWatched ? <BookmarkCheck size={14} strokeWidth={1.5} /> : <Bookmark size={14} strokeWidth={1.5} />}
+                  <span className="hidden sm:inline">{isWatched ? "TRACKED" : "TRACK"}</span>
                 </button>
               )}
-              {/* Mobile menu toggle for tracked/history */}
               <button
                 onClick={() => setMobileMenuOpen((v) => !v)}
-                className="xl:hidden text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors border border-slate-700 px-2.5 py-1.5"
+                className="xl:hidden text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]
+                  transition-colors border border-[var(--color-border)] p-2"
                 aria-label="Menu"
               >
-                {mobileMenuOpen ? "CLOSE" : "MENU"}
+                {mobileMenuOpen ? <X size={16} strokeWidth={1.5} /> : <Menu size={16} strokeWidth={1.5} />}
               </button>
             </div>
           </header>
 
-          {/* Mobile slide-down panel for tracked + history */}
+          {/* Mobile slide-down panel */}
           {mobileMenuOpen && (
-            <div className="xl:hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur-sm px-4 py-4 space-y-4 z-20">
+            <div
+              className="xl:hidden border-b border-[var(--color-border)] px-4 py-4 space-y-4 z-20"
+              style={{ background: "var(--color-surface)" }}
+            >
               <WatchlistPanel
                 watchlist={watchlist}
                 activeTopic={topic}
@@ -263,60 +305,36 @@ export default function Home() {
             </div>
           )}
 
-          <div className="flex-1 px-3 sm:px-6 py-4 sm:py-6 max-w-screen-2xl mx-auto w-full">
-            {/* Topic search bar */}
+          <div className="flex-1 px-4 sm:px-10 py-6 max-w-[1400px] mx-auto w-full">
             <TopicBar onAnalyze={analyze} loading={isLoading} />
 
-            {/* Active topic label */}
             {topic && (
-              <p className="text-xs font-mono text-slate-500 tracking-widest mb-4">
-                TOPIC: <span className="text-slate-300">{topic.toUpperCase()}</span>
+              <p
+                className="text-[var(--color-text-tertiary)] mb-4 uppercase"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.2em" }}
+              >
+                Topic: <span className="text-[var(--color-text-secondary)]">{topic.toUpperCase()}</span>
               </p>
             )}
 
-            {/* Situation summary */}
             <SituationSummary briefing={briefing} pulse={pulse} />
-
-            {/* Mobile tabs */}
             <PanelTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-            {/* Main content grid */}
             <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr] xl:grid-cols-[1fr_1px_1fr_220px] gap-0">
-              {/* Briefing panel */}
               <div className={`pb-6 sm:pb-8 md:pr-6 ${activeTab !== "briefing" ? "hidden md:block" : ""}`}>
-                <BriefingPanel
-                  briefing={briefing}
-                  loading={briefingLoading}
-                  error={briefingError}
-                />
+                <BriefingPanel briefing={briefing} loading={briefingLoading} error={briefingError} />
               </div>
 
-              {/* Vertical divider — desktop only */}
-              <div className="hidden md:block bg-slate-800 self-stretch" />
+              <div className="hidden md:block bg-[var(--color-border)] self-stretch" />
 
-              {/* Pulse panel */}
               <div className={`pb-6 sm:pb-8 md:pl-6 ${activeTab !== "pulse" ? "hidden md:block" : ""}`}>
-                <PulsePanel
-                  pulse={pulse}
-                  loading={pulseLoading}
-                  error={pulseError}
-                />
+                <PulsePanel pulse={pulse} loading={pulseLoading} error={pulseError} />
               </div>
 
-              {/* Watchlist + history sidebar — desktop only */}
-              <div className="hidden xl:block pl-6 border-l border-slate-800 space-y-6">
-                <WatchlistPanel
-                  watchlist={watchlist}
-                  activeTopic={topic}
-                  onSelect={analyze}
-                  onRemove={removeFromWatchlist}
-                />
+              <div className="hidden xl:block pl-6 border-l border-[var(--color-border)] space-y-6">
+                <WatchlistPanel watchlist={watchlist} activeTopic={topic} onSelect={analyze} onRemove={removeFromWatchlist} />
                 {history.length > 0 && (
-                  <HistoryPanel
-                    history={history}
-                    onSelect={analyze}
-                    onClear={clearHistory}
-                  />
+                  <HistoryPanel history={history} onSelect={analyze} onClear={clearHistory} />
                 )}
               </div>
             </div>
